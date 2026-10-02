@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flowers for You</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: radial-gradient(circle at center, #1b2735 0%, #090a0f 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-hidden: hidden;
+            color: #fff;
+        }
+
+        /* Night Sky Stars */
+        .stars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            background-image: 
+                radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 40px),
+                radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 30px),
+                radial-gradient(white, rgba(255,255,255,.1) 2px, transparent 40px);
+            background-size: 550px 550px, 350px 350px, 250px 250px;
+            background-position: 0 0, 40px 60px, 130px 270px;
+            opacity: 0.4;
+        }
+
+        /* Container Design */
+        .card-container {
+            position: relative;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            text-align: center;
+            max-width: 450px;
+            width: 90%;
+            z-index: 2;
+        }
+
+        /* Flower Garden CSS Animation Section */
+        .garden {
+            height: 160px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .flower {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transform-origin: bottom center;
+            animation: sway 4s ease-in-out infinite alternate;
+            margin: 0 15px;
+        }
+
+        .flower-1 { animation-delay: 0s; }
+        .flower-2 { animation-delay: -1s; transform: scale(1.1); }
+        .flower-3 { animation-delay: -2s; transform: scale(0.9); }
+
+        .stem {
+            width: 6px;
+            height: 90px;
+            background: linear-gradient(to top, #1e4d2b, #2d7a44);
+            border-radius: 4px;
+        }
+
+        .blossom {
+            width: 45px;
+            height: 45px;
+            position: relative;
+            animation: bloom 2.5s ease-out forwards;
+            transform: scale(0);
+        }
+
+        /* Custom Flower Colors */
+        .flower-1 .petal { background: #ff4d6d; box-shadow: 0 0 15px rgba(255, 77, 109, 0.6); }
+        .flower-2 .petal { background: #ffb703; box-shadow: 0 0 15px rgba(255, 183, 3, 0.6); }
+        .flower-3 .petal { background: #a2d2ff; box-shadow: 0 0 15px rgba(162, 210, 255, 0.6); }
+
+        .petal {
+            position: absolute;
+            width: 22px;
+            height: 22px;
+            border-radius: 50% 50% 0 50%;
+            top: 0;
+            left: 0;
+            transform-origin: bottom right;
+        }
+
+        .petal:nth-child(1) { transform: rotate(0deg); }
+        .petal:nth-child(2) { transform: rotate(72deg); }
+        .petal:nth-child(3) { transform: rotate(144deg); }
+        .petal:nth-child(4) { transform: rotate(216deg); }
+        .petal:nth-child(5) { transform: rotate(288deg); }
+
+        .center-core {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background: #fff;
+            border-radius: 50%;
+            top: 15px;
+            left: 15px;
+            box-shadow: 0 0 10px #fff;
+            z-index: 10;
+        }
+
+        .leaf {
+            position: absolute;
+            width: 18px;
+            height: 10px;
+            background: #2d7a44;
+            border-radius: 10px 0 10px 0;
+            top: 50px;
+            left: -16px;
+            transform: rotate(-15deg);
+        }
+
+        .flower:nth-child(even) .leaf {
+            left: 6px;
+            border-radius: 0 10px 0 10px;
+            transform: rotate(15deg);
+        }
+
+        /* Message Box Area */
+        .message-box {
+            margin-top: 10px;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            background: linear-gradient(45deg, #ff4d6d, #ffb703);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+        }
+
+        p {
+            font-size: 1.05rem;
+            line-height: 1.6;
+            color: #e0e0e0;
+            min-height: 50px;
+        }
+
+        /* Trigger Interactivity Button */
+        button {
+            margin-top: 25px;
+            background: linear-gradient(45deg, #ff4d6d, #ffb703);
+            border: none;
+            color: white;
+            padding: 12px 28px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255, 77, 109, 0.4);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 77, 109, 0.6);
+        }
+
+        button:active {
+            transform: translateY(1px);
+        }
+
+        /* Animations */
+        @keyframes bloom {
+            to { transform: scale(1); }
+        }
+
+        @keyframes sway {
+            0% { transform: rotate(-3deg); }
+            100% { transform: rotate(3deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="stars"></div>
+
+    <div class="card-container">
+        <!-- Animated Flowers Layout -->
+        <div class="garden">
+            <div class="flower flower-1">
+                <div class="blossom">
+                    <div class="petal"></div>
+                    <div class="petal"></div>
+                    <div class="petal"></div>
+                    <div class="petal"></div>
+                    <div class="petal"></div>
+                    <div class="center-core"></div>
+                </div>
+                <div class="leaf"></div>
+                <div class="stem"></div>
+            </div>
+
+            <div class="flower flower-2">
+                <div class="blossom">
+                    <div class="petal"></div>
+                    <div class="petal"></div>
+                    <div class="petal"></div>
+                    <div class="petal"></div>
+                    <div class="petal"></div>
+                    <div class="center-core"></div>
+                </div>
+                <div class="leaf"></div>
+                <div class="stem"></div>
+            </div>
+
+            <div class="flower flower-3">
+                <div class="blossom">
+                    <div class="petal"></div>
+                    <div class="petal"></div>
+                    <div class="petal"></div>
+                    <div class="petal"></div>
+                    <div class="petal"></div>
+                    <div class="center-core"></div>
+                </div>
+                <div class="leaf"></div>
+                <div class="stem"></div>
+            </div>
+        </div>
+
+        <!-- Custom Greeting Card Content -->
+        <div class="message-box">
+            <h1 id="title">A Special Surprise</h1>
+            <p id="text-message">Click the button below to open your virtual greeting card message.</p>
+            <button onclick="revealMessage()">Open Card</button>
+        </div>
+    </div>
+
+    <script>
+        // Array of randomized sweet notes or messages
+        const cardMessages = [
+            "Happy Birthday Gerlie <3 Just like these flowers, you make the world a much brighter and more beautiful place.more birthday to come jo ingat ka palagi mahal na mahal kita.Have a wonderful day! 🌸",
+            "A little reminder that you are deeply appreciated, loved, and valued. Never forget how amazing you are jo!✨",
+            "Happy Birthday May your day be filled with warm smiles, happy thoughts, and beautiful moments. Sending you fresh energy! 🌻",
+            "Here are some digital flowers that will never wither, just like my appreciation for having you in my life.lagi mo tandaan jo kahit di man tayo laging magkausap mahal ka ni izumi-PALAGI! 🌷"
+        
+        ];
+
+        function revealMessage() {
+            const textElement = document.getElementById("text-message");
+            const titleElement = document.getElementById("title");
+            
+            // Randomly select one note from the collection
+            const randomIndex = Math.floor(Math.random() * cardMessages.length);
+            
+            titleElement.innerText = "For You my Love,jo,mahal. Happy Birthday!❤︎⁠";
+            textElement.innerText = cardMessages[randomIndex];
+            
+            // Re-trigger blooming styles instantly on user click
+            const blossoms = document.querySelectorAll('.blossom');
+            blossoms.forEach(b => {
+                b.style.animation = 'none';
+                b.offsetHeight; /* Trigger reflow configuration */
+                b.style.animation = 'bloom 2s ease-out forwards';
+            });
+        }
+    </script>
+</body>
+</html>
